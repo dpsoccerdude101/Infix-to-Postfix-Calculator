@@ -9,7 +9,8 @@ main {
   margin: 5% auto;
   border: 1px solid black;
   background-image: linear-gradient(white, cyan);
-  /* border-radius: 1rem; */
+  border-radius: 1rem;
+  box-shadow: 3px 3px 5px gray;
 }
 button {
   background-image: linear-gradient(#fff, #ddd);
@@ -24,7 +25,6 @@ section.operations > button {
   padding: 0.25rem 1rem;
 }
 .numbers {
-  flex-basis: 2;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr;
@@ -34,12 +34,10 @@ section.operations > button {
   min-height: 2rem;
 }
 .operations {
-  flex-basis: 2;
   margin-left: 0.5rem;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
-  /* flex-direction: column; */
   grid-gap: 0.25rem;
 }
 button {
@@ -48,10 +46,12 @@ button {
   border-radius: 1rem;
 }
 output {
-  display: block;
-  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.75em;
   background: #eee;
   border: 1px solid grey;
   font-size: 2rem;
-  text-align: center;
+  border-radius: 1rem 1rem 0 0;
 }
