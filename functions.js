@@ -1,6 +1,7 @@
 /**
  * @desc This function takes an infix expression and converts to a postfix expression
  *       using an array (operatorStack), that acts like a stack
+ *
  *  @see "Postfix notation is a notation for writing arithmetic expressions
  *  in which the operands appear before their operators. There are no precedence
  *  rules to learn, and parentheses are never needed. Because of this simplicity,
@@ -16,24 +17,23 @@ function infixToPostFix(infixArray) {
   for (let count = 0; count < infixArray.length; count++) {
     // count-th element
     let thisToken = infixArray[count];
-    if (isNumeric(thisToken)) {
-      // always push numbers in postfix as operands are in the beginning
-      // of the postfix expression
-      postFix.push(thisToken);
-    }
+
+    // always push numbers in postfix as operands are in the beginning
+    // of the postfix expression
+    if (isNumeric(thisToken)) postFix.push(thisToken);
+
     //Ommited steps c,d from notes
     if (isOperator(thisToken)) {
-      if (operatorStack.length == 0) {
-        // if this is the first operator of the infix expression then
-        // push onto operator stack
-        operatorStack.push(thisToken);
-      } else {
+      // if this is the first operator of the infix expression then
+      // push onto operator stack
+      if (operatorStack.length == 0) operatorStack.push(thisToken);
+      else {
         let stackToken = operatorStack[operatorStack.length - 1];
-        //ommit step 2 of e
-        if (getPrecedence(stackToken) < getPrecedence(thisToken)) {
-          //if thisToken has higher precedence then push it onto stack
+
+        //if thisToken has higher precedence then push it onto stack
+        if (getPrecedence(stackToken) < getPrecedence(thisToken))
           operatorStack.push(thisToken);
-        }
+
         while (
           operatorStack.length > 0 &&
           getPrecedence(stackToken) >= getPrecedence(thisToken)
@@ -65,16 +65,12 @@ function evalPostFix(postfixArray) {
   let operandStack = [];
   for (let count = 0; count < postfixArray.length; count++) {
     let thisToken = postfixArray[count];
-    if (isNumeric(thisToken)) {
-      operandStack.push(thisToken);
-    } else if (isOperator(thisToken)) {
+    if (isNumeric(thisToken)) operandStack.push(thisToken);
+    else if (isOperator(thisToken)) {
       let operand1, operand2;
-      if (operandStack.length != 0) {
-        operand2 = operandStack.pop();
-      }
-      if (operandStack.length != 0) {
-        operand1 = operandStack.pop();
-      }
+      if (operandStack.length != 0) operand2 = operandStack.pop();
+      if (operandStack.length != 0) operand1 = operandStack.pop();
+
       /**
        * @desc This is literally all of the logic behind the calculator
        */
@@ -95,9 +91,7 @@ function evalPostFix(postfixArray) {
     }
   }
   // There should only be one element left, the answer
-  if (operandStack.length == 1) {
-    return operandStack[0];
-  }
+  if (operandStack.length == 1) return operandStack[0];
   // Ya done goofed
   else {
     alert("error");
@@ -107,38 +101,26 @@ function evalPostFix(postfixArray) {
 // used in isOperator function
 const operatorArray = ["+", "-", "*", "/", "=", "%"];
 
-let isEmpty = function(inArray) {
-  return inArray.length == 0;
-};
+const isEmpty = (inArray) => inArray.length == 0;
 
-let clickedButton = function(eventClick) {
-  return eventClick.target.dataset;
-};
+const clickedButton = (eventClick) => eventClick.target.dataset;
 
 // returns stringified version of array without commas
-let toString = function(inArray) {
-  return inArray.toString().replace(/,/g, "");
-};
+const toString = (inArray) => inArray.toString().replace(/,/g, "");
 
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
+const isNumeric = (n) => !isNaN(parseFloat(n)) && isFinite(n);
 
-function isOperator(n) {
-  return operatorArray.indexOf(n) > -1;
-}
+const isOperator = (n) => operatorArray.includes(n);
 
 /**
  * @desc Takes an operator and determines its precedence based on PEMDAS
  *       Includes modulo even though no button exists for it
  * @param {string} char
  */
-function getPrecedence(char) {
-  if (char == "+" || char == "-") {
-    return 11;
-  }
-  if (char == "*" || char == "/" || char == "%") {
-    return 12;
-  }
+const getPrecedence = (char) => {
+  if (char == "+" || char == "-") return 11;
+
+  if (char == "*" || char == "/" || char == "%") return 12;
+
   return -1;
-}
+};

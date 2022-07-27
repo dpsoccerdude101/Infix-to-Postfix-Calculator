@@ -14,7 +14,7 @@ let inputArray = [];
 /**
  * @desc This variable serves as a reference to the output html element
  */
-let output = document.getElementsByTagName("output")[0];
+const output = document.getElementsByTagName("output")[0];
 
 //Serves as a way to either input positive numbers or negative
 let quantifier = 1;
@@ -32,7 +32,7 @@ let longpress = false;
  * @desc This event listener listens for a long press of
  *       the clear button to clear the whole input array
  */
-document.addEventListener("long-press", function(e) {
+document.addEventListener("long-press", (e) => {
   if (clickedButton(e)) {
     let dataSet = e.target.dataset;
     if (dataSet.operator) {
@@ -53,7 +53,7 @@ document.addEventListener("long-press", function(e) {
  * parameter of (e). e is an event.
  * @param event e - the click event
  */
-document.addEventListener("click", function(e) {
+document.addEventListener("click", (e) => {
   //clickedButton(event) == Does this click event's source
   // element correspond to a dataset attribute
   if (clickedButton(e)) {
@@ -79,26 +79,25 @@ document.addEventListener("click", function(e) {
  * @param string operator - single character which is a member of the set {+,-,/,*,=,c}
  * @return void
  */
-let processOperatorButtonPush = function(operator) {
+const processOperatorButtonPush = (operator) => {
   // This call to the function resets radix to false and divisor to 10
   // Because if the previous number in the calculation contained a decimal point
   // Then those variables would have been changed to facilitate that and the assumed number,
   // after the operator may not need a decimal point yet
   resetRadixAndDivisor();
-  if (operator == "=") {
-    /**
-     * @desc THIS IS THE MOST IMPORTANT CALL IN THIS FUNCTION
-     *       It takes the infix expression and takes it to functions
-     *       that convert it to postfix expression and computes the postfix
-     *       to a single number.
-     */
-    handleEqualsOperator();
-  } else if (isEmpty(inputArray)) {
+
+  /**
+   * @desc THIS IS THE MOST IMPORTANT CALL IN THIS FUNCTION
+   *       It takes the infix expression and takes it to functions
+   *       that convert it to postfix expression and computes the postfix
+   *       to a single number.
+   */
+  if (operator == "=") handleEqualsOperator();
+  else if (isEmpty(inputArray)) {
     // if array is empty then we will allow the minus operator to negate the first number
-    if (operator == "-") {
-      // "The negator"
-      quantifier *= -1;
-    } else if (operator == ".") {
+    // "The negator"
+    if (operator == "-") quantifier *= -1;
+    else if (operator == ".") {
       let firstRadix = true;
       inputArray.push(0.0 * quantifier);
       handleRadix(firstRadix);
@@ -106,16 +105,12 @@ let processOperatorButtonPush = function(operator) {
   } else if (!isEmpty(inputArray)) {
     // if the most recently pushed element is a number
     if (isNumeric(inputArray[inputArray.length - 1])) {
-      if (operator == ".") {
-        handleRadix();
-      } else {
+      if (operator == ".") handleRadix();
+      else {
         // if 'clear' button is pushed
-        if (operator == "c") {
-          handleClear();
-        } else {
-          //push operator to infix expression
-          inputArray.push(operator);
-        }
+        if (operator == "c") handleClear();
+        //push operator to infix expression
+        else inputArray.push(operator);
         // print to output
         setOutput(toString(inputArray));
       }
@@ -129,7 +124,8 @@ let processOperatorButtonPush = function(operator) {
     }
   }
 };
-let processNumberButtonPush = function(num) {
+
+const processNumberButtonPush = (num) => {
   // if the infix expression is empty
   if (isEmpty(inputArray) || inputArray[0] == "-") {
     inputArray.push(num * quantifier);
@@ -137,16 +133,16 @@ let processNumberButtonPush = function(num) {
   } else if (
     isNumeric(inputArray[inputArray.length - 1]) ||
     inputArray[inputArray.length - 1] == "."
-  ) {
+  )
     handleFurtherNumbersInput(num);
-  } else {
+  else {
     //last element in array is operator
     inputArray.push(num);
     setOutput(toString(inputArray));
   }
 };
 
-let handleClear = function() {
+const handleClear = () => {
   if (longpress) {
     longpress = false;
     inputArray = [];
@@ -170,7 +166,7 @@ let handleClear = function() {
  * @desc This function takes a number and does logic to it based on where it is in the inputArray
  * @param {} num
  */
-let handleFurtherNumbersInput = function(num) {
+const handleFurtherNumbersInput = (num) => {
   // if there is a decimal point then all further number inputs are fractional
   if (radix) {
     if (inputArray[inputArray.length - 1] >= 0) {
@@ -191,37 +187,34 @@ let handleFurtherNumbersInput = function(num) {
   // print output
   setOutput(toString(inputArray));
 };
-let handleRadix = function(first) {
+
+const handleRadix = (first) => {
   radix = true;
-  if (first) {
-    setOutput(".");
-  } else {
-    //fakes the adding of a decimal point by just printing it to the screen
-    setOutput(toString(inputArray) + ".");
-  }
+  if (first) setOutput(".");
+  //fakes the adding of a decimal point by just printing it to the screen
+  else setOutput(toString(inputArray) + ".");
 };
-let handleEqualsOperator = function() {
+
+const handleEqualsOperator = () => {
   // if the infix expression is empty then a press of the '=' button
   // results in a printing of '0'
-  if (isEmpty(inputArray)) {
-    inputArray.push(0);
-  } else {
-    /**
-     * @desc Take infix expression and convert to postfix.
-     *       Take postfix expression and evaluate to single number
-     *       Return single number as sole element of inputArray
-     */
-    inputArray = [evalPostFix(infixToPostFix(inputArray))];
-  }
+  if (isEmpty(inputArray)) inputArray.push(0);
+  /**
+   * @desc Take infix expression and convert to postfix.
+   *       Take postfix expression and evaluate to single number
+   *       Return single number as sole element of inputArray
+   */ else inputArray = [evalPostFix(infixToPostFix(inputArray))];
+
   console.log(inputArray);
   // Print answer to output
   setOutput(toString(inputArray));
 };
-let resetRadixAndDivisor = function() {
+
+const resetRadixAndDivisor = () => {
   radix = false;
   divisor = 10;
 };
 
-let setOutput = function(displayedNumbers) {
+const setOutput = (displayedNumbers) => {
   output.innerText = displayedNumbers;
 };
